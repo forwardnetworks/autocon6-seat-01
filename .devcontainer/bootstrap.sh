@@ -22,8 +22,10 @@ fi
 
 step "cEOS image"
 if ! docker image inspect ceos:4.36.0.1F >/dev/null 2>&1; then
+  # The seat repository's Codespaces secrets carry a read-only registry login for the private cEOS image.
   if [ -n "${AUTOCON6_REGISTRY_TOKEN:-}" ]; then
-    printf '%s' "$AUTOCON6_REGISTRY_TOKEN" | docker login ghcr.io -u autocon6 --password-stdin >/dev/null
+    printf '%s' "$AUTOCON6_REGISTRY_TOKEN" | docker login ghcr.io -u "${AUTOCON6_REGISTRY_USER:-autocon6}" --password-stdin >/dev/null \
+      || echo "registry login failed: tell an instructor (the cEOS image cannot be pulled without it)"
   elif [ -n "${GITHUB_TOKEN:-}" ]; then
     printf '%s' "$GITHUB_TOKEN" | docker login ghcr.io -u "${GITHUB_USER:-codespace}" --password-stdin >/dev/null || true
   fi

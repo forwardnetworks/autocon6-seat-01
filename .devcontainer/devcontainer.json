@@ -14,7 +14,7 @@
   },
   "remoteEnv": { "PATH": "${containerWorkspaceFolder}/.venv/bin:/home/vscode/.local/bin:${containerEnv:PATH}" },
   "postCreateCommand": "bash .devcontainer/bootstrap.sh",
-  "postStartCommand": "nohup .venv/bin/workshop ui --port 8765 > /tmp/workshop-ui.log 2>&1 &",
+  "postStartCommand": "bash .devcontainer/start-ui.sh",
   "forwardPorts": [8765],
   "portsAttributes": { "8765": { "label": "Your lab (workshop ui)", "onAutoForward": "openPreview" } },
   "customizations": {
