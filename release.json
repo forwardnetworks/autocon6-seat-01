@@ -1,0 +1,19 @@
+{
+  "workshop": "0.1.0",
+  "forward_sdk": "0.1.20",
+  "netmiko": "4.7.0",
+  "collector": {
+    "source": "GET /api/software/client?type=HEADLESS_LINUX on the Forward server, as the seat user",
+    "version_policy": "not pinned: download at setup and require the collector release to equal the Forward server release",
+    "last_validated": "26.9.0-18"
+  },
+  "forward_server": "fwd.app (26.9.0-18 when last validated)",
+  "nos_image": "ceos:4.36.0.1F",
+  "netlab": "26.9",
+  "containerlab": "0.79.0",
+  "template_source": {
+    "repo": "autocon6-workshop",
+    "commit": "a42b9f0b10aa4a35472a9ce8d172e6ee689ff4d8",
+    "dirty": false
+  }
+}
