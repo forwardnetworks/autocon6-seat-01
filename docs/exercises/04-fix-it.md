@@ -6,10 +6,17 @@
 
 ### Correct the change (10 min)
 
-On your `retire-all` branch, correct `candidate/r4-bgp.eos` so it retires only the stale advertisements, then push:
+On your `retire-all` branch (check the bottom-left), correct `candidate/r4-bgp.eos` so it retires only the stale
+advertisements. Then, in **Source Control**, commit with the message `Keep the live service advertisement` and press
+**Sync Changes** to push.
+
+<details><summary>Or in the terminal</summary>
+
 ```
 git commit -am "Keep the live service advertisement" && git push
 ```
+</details>
+
 The **forward/predict** check re-runs by itself. This is a regression test on every commit.
 
 ### Prove it (10 min)
@@ -24,8 +31,9 @@ When it's green, read the summary again. Confirm each of these:
 
 ### Approve (10 min)
 
-Merge the pull request. The repository only allows it once **forward/predict** has passed; try merging `retire-one`
-to see the refusal. Then close `retire-one`.
+Merge the pull request: in the **GitHub Pull Requests** panel, open it and press **Merge Pull Request** (choose
+**Squash and Merge**). The same button is on the PR's page on github.com. The repository only allows the merge once
+**forward/predict** has passed. Try merging `retire-one` to see the refusal, then close `retire-one`.
 
 ## Finished early?
 

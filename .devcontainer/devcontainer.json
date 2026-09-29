@@ -19,7 +19,7 @@
   "portsAttributes": { "8765": { "label": "Your lab (workshop ui)", "onAutoForward": "openPreview" } },
   "customizations": {
     "vscode": {
-      "extensions": ["ms-python.python", "srl-labs.vscode-containerlab"],
+      "extensions": ["ms-python.python", "srl-labs.vscode-containerlab", "GitHub.vscode-pull-request-github"],
       "settings": { "workbench.startupEditor": "readme", "files.autoSave": "afterDelay" }
     },
     "codespaces": { "openFiles": ["README.md"] }

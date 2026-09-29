@@ -72,6 +72,10 @@ def markdown(m: Manifest) -> str:
     lines = [f"## Forward Predict: {_MARK.get(m.status, m.status)}", ""]
     if m.reason:
         lines += [m.reason, ""]
+    if m.deployable:
+        target = f"--pr {m.git['pr']}" if m.git.get("pr") else "--evidence evidence/evidence.json"
+        command = f"workshop deploy {target} --confirm {m.candidate_sha256[:7]}"
+        lines += [f"After this pull request is merged, deploy it from your Codespace terminal: `{command}`", ""]
     if m.results:
         lines += ["| Requirement | Result | Expected | Predicted |", "|---|---|---|---|"]
         for r in m.results:

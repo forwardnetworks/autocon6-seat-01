@@ -7,21 +7,29 @@ exactly why.*
 
 ### Finish the job the tempting way (10 min)
 
-In r4's configuration, all three `network` statements look alike. On a new branch, retire **all** of them:
+In r4's configuration, all three `network` statements look alike. Retire **all** of them:
+
+1. **Start from `main`:** click the branch name at the bottom-left → pick `main`. Then click it again → **Create new
+   branch…** → `retire-all`.
+2. **Edit** `candidate/r4-bgp.eos` so it ends with:
+   ```
+   router bgp 65004
+      address-family ipv4
+         no network 10.20.20.0/24
+         no network 10.20.30.0/24
+         no network 10.20.40.0/24
+   ```
+3. **Source Control:** message `Retire r4's network statements`, then **Commit** and **Publish Branch**.
+4. **GitHub Pull Requests:** **Create Pull Request** from `retire-all` into `main`.
+
+<details><summary>Or in the terminal</summary>
+
 ```
 git switch main && git switch -c retire-all
-```
-Make `candidate/r4-bgp.eos` end with:
-```
-router bgp 65004
-   address-family ipv4
-      no network 10.20.20.0/24
-      no network 10.20.30.0/24
-      no network 10.20.40.0/24
-```
-```
+# edit candidate/r4-bgp.eos
 git commit -am "Retire r4's network statements" && git push -u origin HEAD && gh pr create --fill
 ```
+</details>
 It's valid EOS and a three-line diff. A syntax check or a linter would pass it.
 
 ### Watch it fail, before deploy (5 min)

@@ -7,19 +7,34 @@ able to explain every line of the result.*
 
 ### Make a small change (10 min)
 
-Start small: retire **one** stale advertisement. Edit `candidate/r4-bgp.eos` so that it ends with:
-```
-router bgp 65004
-   address-family ipv4
-      no network 10.20.30.0/24
-```
-Open a pull request:
+Start small: retire **one** stale advertisement.
+
+> **In the editor (recommended).** The branch name sits at the bottom-left of the window (the status bar). The
+> **Source Control** panel (the branching icon on the left, or Ctrl+Shift+G) commits and pushes. The **GitHub Pull
+> Requests** panel (the GitHub icon on the left) creates pull requests and shows their checks.
+
+1. **New branch:** click the branch name (`main`) at the bottom-left → **Create new branch…** → type `retire-one` →
+   Enter.
+2. **Edit:** open `candidate/r4-bgp.eos` in the Explorer and make it end with the lines below. Save with Ctrl+S.
+   ```
+   router bgp 65004
+      address-family ipv4
+         no network 10.20.30.0/24
+   ```
+3. **Commit and push:** in **Source Control**, type the message `Retire 10.20.30.0/24 on r4`, then press
+   **Commit**. (If it asks to stage changes, answer **Yes**.) Then **Publish Branch**.
+4. **Pull request:** in **GitHub Pull Requests**, press **Create Pull Request** (or the notification that offers it),
+   check that it goes from `retire-one` into `main`, and press **Create**.
+
+<details><summary>Or in the terminal</summary>
+
 ```
 git switch -c retire-one
 git commit -am "Retire 10.20.30.0/24 on r4"
 git push -u origin HEAD
 gh pr create --fill
 ```
+</details>
 
 ### Follow it through the pipeline (25 min)
 
@@ -43,7 +58,7 @@ The **forward/predict** check starts on your PR. While it runs, read how it work
 
 ### Read the result (10 min)
 
-Open the check's summary on the PR. Every behavioral test should **PASS**, and `STALE-CLEARED` should **FAIL**,
+Open the PR (in the **GitHub Pull Requests** panel, or its link) and the **forward/predict** check's details. Every behavioral test should **PASS**, and `STALE-CLEARED` should **FAIL**,
 because one stale advertisement is still there. A FAIL here means "not done yet", not "broken", and the gate doesn't
 care which: only PASS gets through. Leave this PR open; you'll come back to it.
 

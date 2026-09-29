@@ -17,5 +17,8 @@ Monday, November 16, 2026 · 9:00 AM–1:00 PM · hands-on
 
 Every exercise has a core part (everyone) and **Finished early?** extras. You never need the extras to keep up.
 
+You never need to leave the editor: the file Explorer, **Source Control** and **GitHub Pull Requests** panels on the
+left, and the terminal at the bottom. Each Git step also has the equivalent terminal commands, folded away.
+
 The **Your lab** tab (port 8765) always shows where you are and the next command. Stuck? Raise a hand, or ask Forward
 AI in that tab.

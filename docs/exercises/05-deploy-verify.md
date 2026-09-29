@@ -6,10 +6,12 @@
 
 ### Deploy what was predicted (8 min)
 
+Switch to `main` (bottom-left) and **Sync Changes** in Source Control to pull the merge, then in the terminal:
 ```
-git switch main && git pull
 workshop deploy --pr <number> --confirm <first 7 characters of the candidate sha256>
 ```
+The exact command, with your PR number and `--confirm` value filled in, is at the top of the green **forward/predict**
+check's summary: copy it from there.
 If the confirmation doesn't match, deploy refuses and prints the value it expects. Before writing anything, it checks that:
 
 - the PR is merged and its check passed
