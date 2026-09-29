@@ -8,6 +8,7 @@
     workshop verify      collect again and compare with the prediction
     workshop restore     put r4 back to the baseline (instructor recovery)
     workshop status      where this lab is in the loop
+    workshop probe       test the real flows from the client (8080, 8443, 2222) right now
 
 Forward AI advisers (optional; they advise, Predict and the requirements decide):
 
@@ -90,6 +91,7 @@ def main(argv: list[str] | None = None) -> int:
     u.add_argument("--evidence", default="evidence/evidence.json")
     sub.add_parser("collector", help="download the headless collector for the server's release")
     sub.add_parser("status", help="where this lab is in the loop")
+    sub.add_parser("probe", help="test the real flows from the client (8080, 8443, 2222) right now")
     sub.add_parser("version", help="print versions")
     args = parser.parse_args(argv)
 
@@ -470,6 +472,18 @@ def _collector(settings: config.Settings, args) -> int:
     with Forward(settings) as fwd:
         path = collect.ensure(settings, fwd, log)
     log(f"collector: {path}")
+    return 0
+
+
+def _probe(settings: config.Settings, args) -> int:
+    from workshop import lab
+
+    banner(settings, "probe")
+    log(f"from the client (10.10.10.10) to the service ({lab.SERVICE_IP}):")
+    for port in lab.SERVICE_PORTS:
+        p = lab.probe(port)
+        state = "open" if p.reachable else ("blocked" if p.listener_up else "no answer, and the service is not listening")
+        log(f"  TCP {port:<5} {state}")
     return 0
 
 

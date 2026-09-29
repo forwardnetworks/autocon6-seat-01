@@ -45,7 +45,7 @@ def change_set_name(lab_id: str, git: dict[str, Any], candidate_sha: str) -> str
 def run(settings: Settings, inputs: Inputs) -> Manifest:
     m = Manifest(
         lab_id=settings.lab_id, network_id=settings.network_id, forward_release="", workshop_version=__version__,
-        candidate_path=str(inputs.candidate.relative_to(settings.repo_root) if inputs.candidate.is_absolute() else inputs.candidate),
+        candidate_path=_display_path(inputs.candidate, settings.repo_root),
         candidate_sha256="", candidate_text="", requirements_path=str(inputs.requirements.name), requirements_sha256="",
         baseline_snapshot_id="", baseline_fingerprint="", baseline_processed_at="", baseline_status="", git=dict(inputs.git),
     )
@@ -97,10 +97,18 @@ def run(settings: Settings, inputs: Inputs) -> Manifest:
         m.reason = "Every requirement holds on the predicted network. The change may be approved and deployed."
     elif report.status is Status.FAIL:
         failed = [r for r in report.results if r.status is Status.FAIL]
-        m.reason = "This change would break: " + "; ".join(f"**{r.id}** ({r.title})" for r in failed) + ". Nothing has been deployed."
+        m.reason = "On the predicted network this change fails: " + "; ".join(f"**{r.id}** ({r.title})" for r in failed) + ". Nothing has been deployed."
     else:
         m.reason = "The prediction could not be judged with confidence; it is not approvable. Re-run the check."
     return m
+
+
+def _display_path(path: Path, root: Path) -> str:
+    """The candidate's path relative to the repository when it is inside it, else as given."""
+    try:
+        return str(path.resolve().relative_to(root.resolve()))
+    except ValueError:
+        return str(path)
 
 
 def _stop(m: Manifest, status: str, reason: str) -> Manifest:
