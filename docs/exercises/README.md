@@ -15,6 +15,9 @@ Monday, November 16, 2026 · 9:00 AM–1:00 PM · hands-on
 | 12:30–12:50 | Deploy and Verify | [5 · Deploy, collect, compare](05-deploy-verify.md) | `workshop verify` says MATCH |
 | 12:50–1:00 | Wrap-Up and Q&A | [6 · Beyond the lab](06-beyond.md) | |
 
+**The critical path** if you fall behind: 0 → 1 → 3 → 4 → 5. Exercise 2 can be skipped. Each exercise says what
+to do if you're behind.
+
 Every exercise has a core part (everyone) and **Finished early?** extras. You never need the extras to keep up.
 
 You never need to leave the editor: the file Explorer, **Source Control** and **GitHub Pull Requests** panels on the

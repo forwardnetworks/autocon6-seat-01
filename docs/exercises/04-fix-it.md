@@ -35,6 +35,8 @@ Merge the pull request: in the **GitHub Pull Requests** panel, open it and press
 **Squash and Merge**). The same button is on the PR's page on github.com. The repository only allows the merge once
 **forward/predict** has passed. Try merging `retire-one` to see the refusal, then close `retire-one`.
 
+**Behind?** No red PR of your own? Make the fix directly: retire only the two stale advertisements, open the PR, and merge it when it is green.
+
 ## Finished early?
 
 - Run your own `HTTPS-DENY` test (exercise 2) against the fixed change:

@@ -17,6 +17,7 @@ Forward AI advisers (optional; they advise, Predict and the requirements decide)
     workshop explain     review a prediction and, if it failed, ask why
     workshop agent       draft, predict and take advice in a loop until the gate passes
     workshop ui          your loop, the network and the advisers in a browser tab
+    workshop matrix      predict every way of retiring r4's advertisements and compare them
 """
 
 from __future__ import annotations
@@ -86,6 +87,8 @@ def main(argv: list[str] | None = None) -> int:
     ag.add_argument("--baseline-requirements", default="requirements/baseline.yml")
     ag.add_argument("--out", default="evidence/agent")
     ag.add_argument("--fresh", action="store_true", help="ignore the current candidate and start from a new draft")
+    mx = sub.add_parser("matrix", help="predict every way of retiring r4's advertisements and compare them")
+    mx.add_argument("--all", action="store_true", help="every non-empty combination (7) instead of the four worth comparing")
     u = sub.add_parser("ui", help="your loop, the network and the advisers in a browser tab")
     u.add_argument("--port", type=int, default=8765)
     u.add_argument("--evidence", default="evidence/evidence.json")
@@ -355,6 +358,9 @@ def _propose(settings: config.Settings, args) -> int:
         log(f"workshop propose: {exc}")
         return EXIT["INCONCLUSIVE"]
     log(proposal.file_text().rstrip())
+    marker = settings.state("ai/proposed.txt")
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    marker.write_text("drafted\n")
     if not proposal.ok:
         log("this draft is outside the change's scope and cannot be used: " + "; ".join(proposal.problems))
         return EXIT["ERROR"]
@@ -447,6 +453,18 @@ def _agent(settings: config.Settings, args) -> int:
     else:
         log("no passing change within the budget. Read evidence/agent/agent.json, then take it from here yourself.")
     return EXIT.get(outcome.status, EXIT["ERROR"])
+
+
+def _matrix(settings: config.Settings, args) -> int:
+    from workshop import matrix
+
+    banner(settings, "matrix")
+    log("Predicting each combination against your baseline (about half a minute each). Nothing is written and nothing is deployed.")
+    rows = matrix.run(settings, log, everything=args.all)
+    log("")
+    log(matrix.table(rows, matrix.requirement_ids(settings)))
+    log("\nEach line is a real Forward prediction judged by your requirements. Which combinations are safe? Which pass every test?")
+    return 0
 
 
 def _ui(settings: config.Settings, args) -> int:

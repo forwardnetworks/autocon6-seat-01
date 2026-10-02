@@ -23,7 +23,7 @@ from importlib import resources
 from pathlib import Path
 from typing import Any
 
-from workshop import ai, candidate
+from workshop import ai, candidate, progress
 from workshop.config import Settings
 from workshop.evidence import Manifest
 
@@ -180,6 +180,7 @@ class Board:
             "lab": lab, "baseline": base, "candidate": cand,
             "prediction": asdict(m) if m else None, "prediction_current": bool(m and cand.get("sha256") == m.candidate_sha256),
             "advice": advice, "prs": prs, "deploy": deployed, "verify": verified,
+            "progress": progress.card(s, prs=prs, threads=self.chats.threads, evidence=self.evidence),
             "prompts": [asdict(p) for p in ai.sample_prompts(s.repo_root).values()],
             "threads": self.chats.threads[:12], "busy": self.chats.busy(), "intent": _intent(s.repo_root),
         }

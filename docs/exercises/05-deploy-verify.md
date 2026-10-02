@@ -34,6 +34,8 @@ Verify does four things:
 
 **MATCH** closes the loop: Baseline → Change → Predict → Approve → Deploy → Verify.
 
+**Behind?** Deploy is three steps: switch to `main` and sync, run the command from the green check's summary, then `workshop verify`.
+
 ## Finished early?
 
 - **Make it drift.** Change r4 by hand (`docker exec -it clab-autocon6-r4 Cli`, then `enable`, `configure`,

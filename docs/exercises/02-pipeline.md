@@ -72,6 +72,8 @@ cat evidence/evidence.json
 
 Why do the code and requirements come from `main` and not from the PR? What would a PR author gain if they didn't?
 
+**Behind?** This exercise can be skipped: exercise 3 needs only your baseline. Go straight there. You can read the workflow later.
+
 ## Finished early?
 
 - **Write your own behavioral test.** r1's ACL blocks HTTPS (TCP 8443) too, but no test says it must stay blocked.

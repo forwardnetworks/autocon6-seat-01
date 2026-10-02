@@ -31,5 +31,8 @@ decides whether a change is safe, and only you approve and deploy.
 | Reviewer and Troubleshooter | `workshop explain`, and the **forward/advice** check on your PR | summarises what a predicted change alters and affects and, if it failed, asks why |
 | All of them, in a loop | `workshop agent` | draft → predict → take advice → draft again, stopping at a passing prediction |
 
+The **Your lab** tab also keeps a private checklist of **challenges** (the core steps, and stretch ones like `workshop matrix`,
+which predicts every way of retiring r4's statements), with hints you can reveal one level at a time.
+
 Forward AI answers one chat question per person at a time, and a chat answer takes a minute or two. Read the
 evidence while you wait.

@@ -139,6 +139,21 @@ select { font: inherit; padding: 5px; border-radius: var(--radius); border: 1px 
 .composer textarea { min-height: 44px; }
 .composer .row { display: flex; gap: 8px; align-items: center; margin-top: 6px; flex-wrap: wrap; }
 .empty { color: var(--txt-2); text-align: center; margin: auto; max-width: 360px; }
+
+/* Challenges */
+.chals { list-style:none; margin:0; padding:0; }
+.chal { display:flex; gap:10px; align-items:flex-start; padding:8px 0; border-top:1px solid var(--divider); }
+.chal:first-child { border-top:0; }
+.chal .tick { flex:none; width:20px; height:20px; border-radius:50%; border:2px solid var(--divider); margin-top:1px; display:grid; place-items:center; font-size:12px; color:#fff; }
+.chal.done .tick { background:var(--ok); border-color:var(--ok); } .chal.done .tick::after { content:"✓"; }
+.chal.next .tick { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-bg); }
+.chal .cbody { flex:1; min-width:0; } .chal .ctitle { font-weight:500; } .chal.done .ctitle { color:var(--txt-2); text-decoration:line-through; text-decoration-color:var(--txt-3); }
+.chal .hint-line { font-size:12.5px; color:var(--txt-2); background:var(--group); border-radius:6px; padding:5px 8px; margin-top:5px; }
+.chal .hint-line b { color:var(--accent); margin-right:6px; }
+.chal button.hint-btn { font-size:12px; padding:3px 9px; flex:none; }
+.chal.flash { animation: flash 2.2s ease-out; } @keyframes flash { 0% { background:var(--ok-bg); } 100% { background:transparent; } }
+details#chal-stretch { margin-top:8px; border-top:1px solid var(--divider); padding-top:8px; } details#chal-stretch summary { cursor:pointer; color:var(--accent); font-weight:500; }
+@media (prefers-reduced-motion: reduce) { .chal.flash { animation:none; } }
 footer { text-align: center; font-size: 12px; color: var(--txt-3); margin-top: 24px; }
 </style>
 </head>
@@ -173,6 +188,11 @@ footer { text-align: center; font-size: 12px; color: var(--txt-3); margin-top: 2
       </section>
     </div>
     <div class="col">
+      <section class="card" id="chal-card">
+        <h2>Challenges <span class="muted" style="text-transform:none;font-weight:400;letter-spacing:0" id="chal-sum"></span></h2>
+        <ul class="chals" id="chals-core"></ul>
+        <details id="chal-stretch"><summary>Stretch challenges <span class="muted" id="stretch-sum"></span></summary><ul class="chals" id="chals-stretch"></ul></details>
+      </section>
       <section class="card">
         <h2>Forward AI advisers <span class="muted" style="text-transform:none;font-weight:400">— they advise, Predict decides</span></h2>
         <div id="advice"></div>
@@ -402,12 +422,46 @@ function rotateTip() {
   setTimeout(() => { el.innerHTML = TIPS[tipIndex++ % TIPS.length]; el.style.opacity = 1; }, 400);
 }
 
+
+/* ---- challenges: a private checklist with hints that reveal one level at a time ---- */
+let hintLevel = {}, prevDone = null, chalSig = "", stretchOpen = false;
+try { hintLevel = JSON.parse(localStorage.getItem("wsa4-hints") || "{}"); } catch { hintLevel = {}; }
+function renderChallenges(s) {
+  const p = s.progress;
+  if (!p) return;
+  const sig = JSON.stringify([p.challenges.map((c) => [c.id, c.done]), p.next, hintLevel, stretchOpen]);
+  if (sig === chalSig) return;
+  chalSig = sig;
+  const done = new Set(p.challenges.filter((c) => c.done).map((c) => c.id));
+  const fresh = prevDone ? [...done].filter((id) => !prevDone.has(id)) : [];
+  prevDone = done;
+  const row = (c) => {
+    const lvl = Math.min(hintLevel[c.id] || 0, 3);
+    const hints = c.done ? "" : c.hints.slice(0, lvl).map((h, i) => `<div class="hint-line"><b>Hint ${i + 1}</b>${inline(esc(h))}</div>`).join("");
+    const btn = c.done || lvl >= 3 ? "" : `<button class="ghost hint-btn" data-id="${esc(c.id)}">${lvl ? "More help" : "Hint"}</button>`;
+    return `<li class="chal${c.done ? " done" : ""}${c.id === p.next ? " next" : ""}${fresh.includes(c.id) ? " flash" : ""}"><span class="tick"></span><div class="cbody"><div class="ctitle">${esc(c.title)}${c.minutes ? ` <span class="muted" style="font-weight:400">· about ${c.minutes} min</span>` : ""}</div>${hints}</div>${btn}</li>`;
+  };
+  $("chals-core").innerHTML = p.challenges.filter((c) => c.kind === "core").map(row).join("");
+  $("chals-stretch").innerHTML = p.challenges.filter((c) => c.kind === "stretch").map(row).join("");
+  $("chal-sum").textContent = `· ${p.core_done} of ${p.core_total} steps`;
+  $("stretch-sum").textContent = `(${p.stretch_done} of ${p.stretch_total})`;
+  $("chal-stretch").open = stretchOpen;
+}
+$("chal-card").addEventListener("click", (e) => {
+  const b = e.target.closest(".hint-btn");
+  if (!b) return;
+  hintLevel[b.dataset.id] = Math.min((hintLevel[b.dataset.id] || 0) + 1, 3);
+  try { localStorage.setItem("wsa4-hints", JSON.stringify(hintLevel)); } catch { /* private window: hints last this page view */ }
+  if (state) renderChallenges(state);
+});
+$("chal-stretch").addEventListener("toggle", () => { stretchOpen = $("chal-stretch").open; chalSig = ""; });
+
 async function refresh() {
   try {
     state = await (await fetch("/api/state")).json();
   } catch { $("seat").textContent = "disconnected — is workshop ui still running?"; return; }
   $("seat").textContent = `${state.lab_id} · Forward network ${state.network_id}`;
-  renderLoop(state.stages); renderTopo(state); renderPrediction(state); renderVerify(state); renderAdvice(state); renderChat(state);
+  renderLoop(state.stages); renderTopo(state); renderPrediction(state); renderVerify(state); renderAdvice(state); renderChat(state); renderChallenges(state);
   $("intent").innerHTML = md(state.intent);
 }
 refresh(); rotateTip();

@@ -29,6 +29,8 @@ with it?" Today that second question gets its own stage in the pipeline, and it 
   reads off the routers.
 - **This GitHub repository:** where changes are proposed, predicted and approved.
 
+**Behind?** The one must-do is `workshop up` running. Everything else can wait.
+
 ## Finished early?
 
 - `workshop --help`: one short command per step of the loop.

@@ -45,6 +45,8 @@ baseline tests run against that model. Every line should say **PASS**.
 `STALE-KNOWN` is the one to read. It lists r4 `network` statements whose prefixes r4 has no route for. These are
 stale advertisements, and retiring them is today's change request.
 
+**Behind?** The one must-do is `workshop baseline` with every line **PASS**. Skip the router tour and the AI prompts.
+
 ## Finished early?
 
 - Look at the real routers. Type `enable` first, then try `show ip bgp summary`, `show ip route 10.20.20.0/24`,

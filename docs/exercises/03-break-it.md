@@ -63,8 +63,14 @@ workshop ask --prompt predicted-r1-routes
 ```
 The requirements, evaluated on the predicted network, are the judge. An AI answer is advice.
 
+**Behind?** Do steps 1 to 3 (make the change, open the PR, see it go red) and read the check's summary. Skip the AI discussion.
+
 ## Finished early?
 
+- **Predict them all.** `workshop matrix` predicts four ways of retiring r4's statements (about two minutes) and
+  prints a grid of which tests each one passes. *Before you run it,* write down which rows you expect to pass
+  everything. Then compare. Add `--all` for all seven combinations. Only one row is fully green: why is "retire
+  everything" not it, even though it clears every stale advertisement?
 - Another "looks safe" change: retire only `10.20.20.0/24`, the one statement that *isn't* stale. Guess which tests
   fail, then check with `workshop predict`.
 - `cat evidence/evidence.json` for the failed prediction: find the predicted snapshot id and the change set.
