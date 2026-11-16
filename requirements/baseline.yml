@@ -29,9 +29,9 @@ requirements:
     port: 8080
     path: [r1, r2, r4]
     title: Service traffic takes the primary path
-#  - id: STALE-KNOWN
-#    kind: nqe
-#    query_file: nqe/stale_bgp_advertisements.nqe
-#    expect_rows: 2
-#    title: The two stale advertisements are present
-#    why: The change request targets exactly these; a different count means the lab is not at baseline.
+  - id: STALE-KNOWN
+    kind: nqe
+    query_file: nqe/stale_bgp_advertisements.nqe
+    expect_rows: 2
+    title: The two stale advertisements are present
+    why: The change request targets exactly these; a different count means the lab is not at baseline.
