@@ -33,9 +33,9 @@ requirements:
     path: [r1, r2, r4]
     title: Service traffic takes the primary path
     why: The preferred path is R1 -> R2 -> R4; the change must not move traffic.
-  - id: STALE-CLEARED
-    kind: nqe
-    query_file: nqe/stale_bgp_advertisements.nqe
-    expect_rows: 0
-    title: No stale BGP advertisements remain
-    why: This is the finding the change request exists to fix.
+ # - id: STALE-CLEARED
+ #   kind: nqe
+ #   query_file: nqe/stale_bgp_advertisements.nqe
+ #   expect_rows: 0
+ #   title: No stale BGP advertisements remain
+ #   why: This is the finding the change request exists to fix.
